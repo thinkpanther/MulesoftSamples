@@ -1,0 +1,47 @@
+id: mel-message-modification-policy
+name: MEL Message Modification
+description: Specifies a MEL message modification expression which when evaluated against incoming messages transforms them all.
+category: Security
+type: custom
+standalone: true
+requiresConnectivity: false
+providedCharacteristics: [Message modification]
+requiredCharacteristics: []
+configuration:   
+  - propertyName: modification
+    name: MEL modification expression
+    description: MEL expression to be executed upon incoming messages
+    type: expression
+    sensitive: false
+    optional: true
+  - propertyName: external_file_protocol
+    name: External File Protocol
+    description: Protocol through which the external file can be accessed
+    type: string
+    sensitive: false
+    optional: true
+  - propertyName: external_file_hostname
+    name: External File Hostname
+    description: Hostname where the external file is located
+    type: string
+    sensitive: false
+    optional: true
+  - propertyName: external_file_port
+    name: External File Port
+    description: Port where the external file can be accessed
+    type: string
+    sensitive: false
+    optional: true  
+  - propertyName: external_file_basepath
+    name: External File Base Path
+    description: Base Path where the external file can be accessed
+    type: string
+    sensitive: false
+    optional: true      
+  - propertyName: external_file_path
+    name: External File Path
+    description: Path where the external file can be accessed
+    type: string
+    sensitive: false
+    optional: true   
+    
