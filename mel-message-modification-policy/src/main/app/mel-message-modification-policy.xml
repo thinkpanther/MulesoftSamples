@@ -10,29 +10,19 @@
 						http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 						http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
  <http:request-config name="HTTP_Request_Configuration" host="{{external_file_hostname}}" port="80" basePath="/fc"/>  
- <objectstore:config name="ObjectStore_Connector" partition="custom" entryTtl="180000" expirationInterval="30000" maxEntries="1000"/>     
  <!-- MEL message modification policy --> 
  <!-- Modifies a message based on the given MEL. Applied according to the pointcut specified below. -->
  <before>  	 
  	  <mule:logger level="DEBUG" message="Policy {{ policyId }} applied MEL"/>  
- 	   <mule:enricher target="#[variable:opID]" source="#[payload]">
-            <mule:processor-chain>
-              <mule:choice>
-                <mule:when expression="#[payload == false]">
-                <http:request config-ref="SkyBiometric_HTTP_Request_Configuration" path="/account/users" method="GET">
+ 	      <mule:enricher target="#[variable:opID]" doc:name="Message Enricher" source="#[json:operation_id]">
+            <mule:processor-chain doc:name="Processor Chain">
+                <http:request config-ref="HTTP_Request_Configuration" path="/account/users" method="GET" doc:name="Make External Call">
                     <http:request-builder>
                         <http:query-param paramName="api_key" value="4d7e5ff3c02e4eaba58e27a015f03f0c"/>
                         <http:query-param paramName="api_secret" value="34ed96a91c6747909b7eef497d7db2bd"/>
                         <http:query-param paramName="namespaces" value="an_faces"/>
                     </http:request-builder>
                 </http:request>
-                <objectstore:store config-ref="ObjectStore_Connector" key="opID" value-ref="#[json:operation_id]"/>
-                </mule:when>
-                <mule:otherwise>
-                <mule:logger message="Object found in store" level="INFO"/>
-                </mule:otherwise>
-            </mule:choice>
-        <objectstore:retrieve config-ref="ObjectStore_Connector" key="opID"/>
         </mule:processor-chain>
         </mule:enricher>   
        <mule:logger level="INFO"/>
